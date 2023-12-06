@@ -9,35 +9,35 @@ RED = (255, 0, 0)
 
 
 
-class Seeker:
-    def __init__(self, r,x,y,dir):
-        self.dir = dir
-        self.xV = 5
-        self.yV = 5
-        self.r = r
-        self.hit = False
-        self.x = x
-        self.y = y
+# class Seeker:
+#     def __init__(self, r,x,y,dir):
+#         self.dir = dir
+#         self.xV = 5
+#         self.yV = 5
+#         self.r = r
+#         self.hit = False
+#         self.x = x
+#         self.y = y
 
 
 
-    def caught_hunted_obj(self,hunted_object):
-            did_it_hit = 
-            if did_it_hit == True:
-                self.hit = True
-            return did_it_hit
+#     def caught_hunted_obj(self,hunted_object):
+#             did_it_hit = 
+#             if did_it_hit == True:
+#                 self.hit = True
+#             return did_it_hit
     
-    def movement(self,hunted_object):
-        dx =  hunted_object.x - self.x
-        dy =  hunted_object.y - self.y
-        dist = (dx**2 + dy**2)**0.5
-        angle = math.atan2(dy,dx)
-        self.xV = 5 * math.cos(angle)
-        self.yV = 5 * math.sin(angle)
-        self.x += self.xV
-        self.y += self.yV
-        if dist < self.r + hunted_object.r:
-            
+#     def movement(self,hunted_object):
+#         dx =  hunted_object.x - self.x
+#         dy =  hunted_object.y - self.y
+#         dist = (dx**2 + dy**2)**0.5
+#         angle = math.atan2(dy,dx)
+#         self.xV = 5 * math.cos(angle)
+#         self.yV = 5 * math.sin(angle)
+#         self.x += self.xV
+#         self.y += self.yV
+#         if dist < self.r + hunted_object.r:
+#             f
 
 
 
@@ -97,7 +97,7 @@ while not done:
  
     # --- Drawing code should go here
     #pygame.draw.rect(Surface, color, Rect, width=0): return Rect
-    pygame.draw.rect(screen, RED, [55, 50, 20, 25], 0)
+    pygame.draw.rect(screen, RED, [0, size[1]-50, 2000, 25], 0)
     # Draw on the screen a green line from (0, 0) to (100, 100)
     # that is 5 pixels wide.
     pygame.draw.line(screen, GREEN, [0, 0], [100, 100], 5)
@@ -107,13 +107,14 @@ while not done:
         pygame.draw.line(screen,RED,[0,10+y_offset],[100,110+y_offset],5)
 
     
-    for i in range(200):
+    for i in range(2000):
     
         radians_x = i / 20
         radians_y = i / 6
     
-        x = int(75 * math.sin(radians_x)) + 200
-        y = int(75 * math.cos(radians_y)) + 200
+        # x = int(75 * math.sin(radians_x)) + 200
+        x = i + 10
+        y = int(75 * math.cos(radians_y)) + 200 + i/2
     
         pygame.draw.line(screen, BLACK, [x,y], [x+5,y], 5)
 
