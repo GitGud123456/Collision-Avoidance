@@ -29,4 +29,3 @@ time = 5  # Time in seconds
 simulation.update(time)
 
 print("Final position:", simulation.position, "meters")
-
