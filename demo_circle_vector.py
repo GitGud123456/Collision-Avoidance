@@ -72,7 +72,7 @@ class Circle:
         self.radius = radius
         self.mass = mass
         self.color = color
-        self.futrue = (self.position,self.velocity)
+        self.future = (self.position,self.velocity)
 
     def move(self):
         self.position = self.position + self.velocity
@@ -80,29 +80,29 @@ class Circle:
     def draw_projection(self,width,height,collision_point):
         current_pos = self.position
         current_velo = self.velocity
-        futrue_pos = current_pos
+        future_pos = current_pos
         collision_point = Vector(collision_point)
-
-        if collision_point != None and collision_point /(futrue_pos + current_velo) :
-            dist = collision_point
+        relative_position = collision_point - current_pos
+        if collision_point != None:
+            while relative_position.dot(-1*current_velo) <= 0:
+                future_pos = future_pos + current_velo
+                pygame.draw.circle(screen, BLACK, (int(future_pos.x), int(future_pos.y)), self.radius,2)
+        else:
         
-        
-        
-
-        # print(futrue_pos,str(futrue_pos), "lllllll ",collision_point)
-        while not (futrue_pos.x - self.radius <= 0 or futrue_pos.x + self.radius >= width or futrue_pos.y - self.radius <=0 or futrue_pos.y + self.radius >= height):
-            futrue_pos = futrue_pos + current_velo
-            pygame.draw.circle(screen, BLACK, (int(futrue_pos.x), int(futrue_pos.y)), self.radius,2)
+            # print(future_pos,str(future_pos), "lllllll ",collision_point)
+            while not (future_pos.x - self.radius <= 0 or future_pos.x + self.radius >= width or future_pos.y - self.radius <=0 or future_pos.y + self.radius >= height):
+                future_pos = future_pos + current_velo
+                pygame.draw.circle(screen, BLACK, (int(future_pos.x), int(future_pos.y)), self.radius,2)
        
         # if collision_point is not None:
         #     collision_point = Vector(collision_point)
-        #     t = (collision_point - futrue_pos).vdiv(current_velo)
-        #     intersection_point = futrue_pos + current_velo * t
-        #     while (futrue_pos - intersection_point).dot(current_velo) >= self.radius+ 1e-6:
-        #         futrue_pos = futrue_pos + current_velo / current_velo.magnitude()
-        #         if (futrue_pos - intersection_point).dot(current_velo) < 0:
+        #     t = (collision_point - future_pos).vdiv(current_velo)
+        #     intersection_point = future_pos + current_velo * t
+        #     while (future_pos - intersection_point).dot(current_velo) >= self.radius+ 1e-6:
+        #         future_pos = future_pos + current_velo / current_velo.magnitude()
+        #         if (future_pos - intersection_point).dot(current_velo) < 0:
         #             break
-        #         pygame.draw.circle(screen, BLACK, (int(futrue_pos.x), int(futrue_pos.y)), self.radius, 2)
+        #         pygame.draw.circle(screen, BLACK, (int(future_pos.x), int(future_pos.y)), self.radius, 2)
 
     def check_wall_collision(self, width, height):
 
@@ -136,7 +136,7 @@ class Circle:
 
         pygame.draw.circle(screen, self.color, (int(self.position.x), int(self.position.y)), self.radius)
 
-    # def drawfutrue(self, screen):
+    # def drawfuture(self, screen):
     #     radius = 2
     #     distance = math.sqrt((old.x - self.x)**2 + (old.y - self.y)**2)
     #     if distance > 2*radius:
@@ -293,8 +293,8 @@ clock = pygame.time.Clock()
 
 
 # Create circles using the Circle class
-for _ in range(0,10):
-    objectArray.append(Circle(position=[WIDTH // 4, HEIGHT // 2], velocity=[random.randint(-7,7), random.randint(-7,7)], radius=random.randint(10,40), color=RED,mass=random.randint(1,20)))
+# for _ in range(0,10):
+#     objectArray.append(Circle(position=[WIDTH // 4, HEIGHT // 2], velocity=[random.randint(-7,7), random.randint(-7,7)], radius=random.randint(10,40), color=RED,mass=random.randint(1,20)))
 circle1 = Circle(position=[WIDTH // 3, HEIGHT // 2], velocity=[7, 4], radius=20, color=RED,mass=1)
 circle2 = Circle(position=[WIDTH // 4, HEIGHT // 2], velocity=[-7, 2], radius=20, color=BLUE,mass=1)
 circle3 = Circle(position=[3 * WIDTH // 4, HEIGHT // 2], velocity=[-5, 1], radius=20, color=BLUE,mass=1)
