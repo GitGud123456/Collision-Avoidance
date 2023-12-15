@@ -78,12 +78,17 @@ class Circle:
         self.position = self.position + self.velocity
 
     def draw_projection(self,width,height,collision_point):
-        # if collision_point != None:
-        #     collision_point = Vector(collision_point)
-        
         current_pos = self.position
         current_velo = self.velocity
         futrue_pos = current_pos
+        collision_point = Vector(collision_point)
+
+        if collision_point != None and collision_point /(futrue_pos + current_velo) :
+            dist = collision_point
+        
+        
+        
+
         # print(futrue_pos,str(futrue_pos), "lllllll ",collision_point)
         while not (futrue_pos.x - self.radius <= 0 or futrue_pos.x + self.radius >= width or futrue_pos.y - self.radius <=0 or futrue_pos.y + self.radius >= height):
             futrue_pos = futrue_pos + current_velo
@@ -167,11 +172,6 @@ class Circle:
 
 
 def perfectly_elastic_collision(circle1, circle2):
-
-    # v1x = circle1.velocity.x
-    # v1y = circle1.velocity.y
-    # v2x = circle2.velocity.x
-    # v2y = circle2.velocity.y
 
     v1 = circle1.velocity
     v2 = circle2.velocity
