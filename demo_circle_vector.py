@@ -27,17 +27,38 @@ class Vector:
     def __sub__(self, other):
         return Vector(self.x - other.x, self.y - other.y)
     
-    def __mul__(self, scalar):
-        if isinstance(scalar, (int,float)):
-            return Vector(self.x * scalar, self.y * scalar)
+    # def __mul__(self, scalar):
+    #     if isinstance(scalar, (int,float)):
+    #         return Vector(self.x * scalar, self.y * scalar)
+    #     else:
+    #         raise TypeError("Unsupported operand type for multiplication.")
+    
+    def __truediv__(self,scalar):
+        return Vector(self.x / scalar, self.y / scalar)
+    
+    def __str__(self):
+        return '<{:.6g}, {:.6g}>'.format(self.x, self.y)
+    
+    def dot(self, other):
+        return self.x * other.x + self.y * other.y
+    
+    def vdiv(self,other):
+        return Vector(self.x / other.x, self.y / other.y)
+    
+    def magnitude(self):
+        return math.sqrt(self.x**2 + self.y**2)
+
+    def __mul__(self, other):
+        if isinstance(other, (int, float)):
+            return Vector(self.x * other, self.y * other)
+        elif isinstance(other, Vector):
+            return Vector(self.x * other.x, self.y * other.y)
         else:
             raise TypeError("Unsupported operand type for multiplication.")
     
-    def __truediv__(self,scalar):
-        return Vector(self.x / scalar, self.y /scalar)
 
-    def dot(self, other):
-        return self.x * other.x + self.y * other.y
+    
+    
     
 
     
@@ -57,18 +78,26 @@ class Circle:
         self.position = self.position + self.velocity
 
     def draw_projection(self,width,height,collision_point):
-        if collision_point == None:
-            point = -100,-100
-        else:
-            point = collision_point 
+        # if collision_point != None:
+        #     collision_point = Vector(collision_point)
+        
         current_pos = self.position
         current_velo = self.velocity
         futrue_pos = current_pos
-        print(futrue_pos,collision_point)
-        while not (futrue_pos.x - self.radius <= 0 or futrue_pos.x + self.radius >= width or futrue_pos.y - self.radius <=0 or futrue_pos.y + self.radius >= height or futrue_pos == collision_point):
-            futrue_pos = futrue_pos.__add__(current_velo)
+        # print(futrue_pos,str(futrue_pos), "lllllll ",collision_point)
+        while not (futrue_pos.x - self.radius <= 0 or futrue_pos.x + self.radius >= width or futrue_pos.y - self.radius <=0 or futrue_pos.y + self.radius >= height):
+            futrue_pos = futrue_pos + current_velo
             pygame.draw.circle(screen, BLACK, (int(futrue_pos.x), int(futrue_pos.y)), self.radius,2)
-        return futrue_pos
+       
+        # if collision_point is not None:
+        #     collision_point = Vector(collision_point)
+        #     t = (collision_point - futrue_pos).vdiv(current_velo)
+        #     intersection_point = futrue_pos + current_velo * t
+        #     while (futrue_pos - intersection_point).dot(current_velo) >= self.radius+ 1e-6:
+        #         futrue_pos = futrue_pos + current_velo / current_velo.magnitude()
+        #         if (futrue_pos - intersection_point).dot(current_velo) < 0:
+        #             break
+        #         pygame.draw.circle(screen, BLACK, (int(futrue_pos.x), int(futrue_pos.y)), self.radius, 2)
 
     def check_wall_collision(self, width, height):
 
@@ -157,70 +186,6 @@ def perfectly_elastic_collision(circle1, circle2):
     circle2.velocity = new_v2
 
 
-# def elastic_collision(obj1, obj2):
-#     # Calculate relative velocity components
-#     relative_velocity_x = obj2.vx - obj1.vx
-#     relative_velocity_y = obj2.vy - obj1.vy
-
-#     # Calculate relative velocity in terms of the normal vector
-#     relative_velocity_normal = (
-#         relative_velocity_x * (obj2.x_pos - obj1.x_pos) +
-#         relative_velocity_y * (obj2.y_pos - obj1.y_pos)
-#     ) / ((obj2.x_pos - obj1.x_pos)**2 + (obj2.y_pos - obj1.y_pos)**2)
-
-#     # Calculate new velocities after collision using the normal and tangential components
-#     obj1.vx += relative_velocity_normal * (obj2.x_pos - obj1.x_pos)
-#     obj1.vy += relative_velocity_normal * (obj2.y_pos - obj1.y_pos)
-
-#     obj2.vx -= relative_velocity_normal * (obj2.x_pos - obj1.x_pos)
-#     obj2.vy -= relative_velocity_normal * (obj2.y_pos - obj1.y_pos)
-
-
-# def predict_collision_point(circle1, circle2):
-#     # Calculate relative velocity
-#     relative_velocity = circle2.velocity - circle1.velocity
-
-#     # Calculate relative position
-#     relative_position = circle2.position - circle1.position
-
-#     # Calculate time to collision
-#     a = relative_velocity.dot(relative_velocity)
-#     b = 2 * relative_position.dot(relative_velocity)
-#     c = relative_position.dot(relative_position) - (circle1.radius + circle2.radius)**2
-
-#     discriminant = b**2 - 4 * a * c
-
-#     if discriminant < 0:
-#         # No real roots, no collision
-#         return None
-
-#     # Calculate the time of collision
-#     t1 = (-b + math.sqrt(discriminant)) / (2 * a)
-#     t2 = (-b - math.sqrt(discriminant)) / (2 * a)
-
-#     # Use the smaller positive root
-#     time_to_collision = min(t1, t2) if t1 >= 0 and t2 >= 0 else max(t1, t2)
-
-#     # Predict future positions of the circles at the time of collision
-#     future_position1 = circle1.position + circle1.velocity * time_to_collision
-#     future_position2 = circle2.position + circle2.velocity * time_to_collision
-
-#     # Average the positions to get the collision point
-#     collision_point = (future_position1 + future_position2) * 0.5
-#     pygame.draw.circle(screen, GREEN, (int(collision_point.x), int(collision_point.y)), 5)
-#     return collision_point.x, collision_point.y
-
-# # Example usage:
-# collision_point = predict_collision(circle1, circle2)
-# print("Initial Collision Point Prediction:", collision_point)
-
-# # Update velocities
-# circle1.velocity = Vector(3, 2)
-# circle2.velocity = Vector(-2, 1)
-
-# # Re-predict collision point with updated velocities
-# collision_point_updated = predict_collision(circle1, circle2)
-# print("Updated Collision Point Prediction:", collision_point_updated)
 def filter_circles(original_list):
     return [item for item in original_list if isinstance(item, Circle)]
 
@@ -238,7 +203,7 @@ def find_soonest_collision(circles):
                 collision_pair = (circles[i], circles[j])
                 collision_point = point
 
-    return collision_pair,collision_point
+    return collision_pair,collision_point,earliest_collision_time
 
 
 def predict_collision_time(circle1, circle2):
@@ -265,6 +230,11 @@ def predict_collision_time(circle1, circle2):
 
     # Use the smaller positive root
     time_to_collision = min(t1, t2) if t1 >= 0 and t2 >= 0 else max(t1, t2)
+
+    # Check if circles are moving away from each other
+    if relative_velocity.dot(relative_position) >= 0:
+        return None, None
+
     future_position1 = circle1.position + circle1.velocity * time_to_collision
     future_position2 = circle2.position + circle2.velocity * time_to_collision
 
@@ -274,7 +244,12 @@ def predict_collision_time(circle1, circle2):
     objectArray.append((screen,GREEN,(int(collision_point.x), int(collision_point.y)), 5, time_to_collision))
     return time_to_collision,collision_point
 
+def handle_collision(circle1, circle2, earliest_collision_time):
+    circle1.position = circle1.position + circle1.velocity * earliest_collision_time
+    circle2.position = circle2.position + circle2.velocity * earliest_collision_time
 
+    # Calculate new velocities after collision
+    perfectly_elastic_collision(circle1, circle2)
 
 
 
@@ -318,9 +293,9 @@ clock = pygame.time.Clock()
 
 
 # Create circles using the Circle class
-# for _ in range(0,5):
-#     objectArray.append(Circle(position=[WIDTH // 4, HEIGHT // 2], velocity=[random.randint(-7,7), random.randint(-7,7)], radius=random.randint(10,40), color=RED,mass=random.randint(1,20)))
-circle1 = Circle(position=[WIDTH // 4, HEIGHT // 2], velocity=[7, 4], radius=20, color=RED,mass=1)
+for _ in range(0,10):
+    objectArray.append(Circle(position=[WIDTH // 4, HEIGHT // 2], velocity=[random.randint(-7,7), random.randint(-7,7)], radius=random.randint(10,40), color=RED,mass=random.randint(1,20)))
+circle1 = Circle(position=[WIDTH // 3, HEIGHT // 2], velocity=[7, 4], radius=20, color=RED,mass=1)
 circle2 = Circle(position=[WIDTH // 4, HEIGHT // 2], velocity=[-7, 2], radius=20, color=BLUE,mass=1)
 circle3 = Circle(position=[3 * WIDTH // 4, HEIGHT // 2], velocity=[-5, 1], radius=20, color=BLUE,mass=1)
 
@@ -347,34 +322,54 @@ while running:
             objectArray.remove(obj)
 
 
-    collision_pair,collision_point = find_soonest_collision(filter_circles(objectArray))
-
-
-
-
-
-    # Draw background
-
+    collision_pair,collision_point,earliest_collision_time = find_soonest_collision(filter_circles(objectArray))
+ # Draw background
     screen.fill(WHITE)
+     # Handle collision if predicted collision point is reached
+    if collision_point is not None:
+        for circle in objectArray:
+            if isinstance(circle, Circle):
+                circle.draw_projection(WIDTH, HEIGHT, collision_point)
+
+        # # Update the positions and velocities based on the predicted collision point
+        # for circle in collision_pair:
+        #     circle1, circle2 = collision_pair
+        #     handle_collision(circle1, circle2, earliest_collision_time)
+
+   
+
+    # Draw the circles
+    for obj in objectArray:
+        if isinstance(obj, Circle):
+            obj.draw(screen)
+        else:
+            pygame.draw.circle(obj[0], obj[1], obj[2], obj[3])
+
+
+
+
+    # # Draw background
+
+    # screen.fill(WHITE)
     
 
    
 
 
-    # Draw the circles
-    for obj in objectArray:
-        if isinstance(obj,Circle):
-            if collision_pair != None and (obj == collision_pair[0] or obj == collision_pair[1]):
-                obj.draw_projection(WIDTH,HEIGHT,collision_point)
-                obj.draw(screen)
-            else:
-                obj.draw_projection(WIDTH,HEIGHT,None)
-                obj.draw(screen)
-        else:
-            pygame.draw.circle(obj[0], obj[1], obj[2], obj[3])
+    # # Draw the circles
+    # for obj in objectArray:
+    #     if isinstance(obj,Circle):
+    #         if collision_pair != None and (obj == collision_pair[0] or obj == collision_pair[1]):
+    #             obj.draw_projection(WIDTH,HEIGHT,collision_point)
+    #             obj.draw(screen)
+    #         else:
+    #             obj.draw_projection(WIDTH,HEIGHT,None)
+    #             obj.draw(screen)
+    #     else:
+    #         pygame.draw.circle(obj[0], obj[1], obj[2], obj[3])
            
 
-    # find_soonest_collision(objectArray)
+    # # find_soonest_collision(objectArray)
 
 
     # Update the display
