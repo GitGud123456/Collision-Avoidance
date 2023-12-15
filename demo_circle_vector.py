@@ -81,18 +81,19 @@ class Circle:
         current_pos = self.position
         current_velo = self.velocity
         future_pos = current_pos
-        collision_point = Vector(collision_point)
-        relative_position = collision_point - current_pos
-        if collision_point != None:
-            while relative_position.dot(-1*current_velo) <= 0:
-                future_pos = future_pos + current_velo
-                pygame.draw.circle(screen, BLACK, (int(future_pos.x), int(future_pos.y)), self.radius,2)
-        else:
         
-            # print(future_pos,str(future_pos), "lllllll ",collision_point)
+        if collision_point == None:
             while not (future_pos.x - self.radius <= 0 or future_pos.x + self.radius >= width or future_pos.y - self.radius <=0 or future_pos.y + self.radius >= height):
                 future_pos = future_pos + current_velo
                 pygame.draw.circle(screen, BLACK, (int(future_pos.x), int(future_pos.y)), self.radius,2)
+        else:
+            collision_point = Vector(collision_point)
+            relative_position = collision_point - future_pos
+            while relative_position.dot(current_velo) > 0:
+                print("why")
+                future_pos = future_pos + current_velo
+                pygame.draw.circle(screen, BLACK, (int(future_pos.x), int(future_pos.y)), self.radius,2)
+            
        
         # if collision_point is not None:
         #     collision_point = Vector(collision_point)
@@ -323,13 +324,21 @@ while running:
 
 
     collision_pair,collision_point,earliest_collision_time = find_soonest_collision(filter_circles(objectArray))
- # Draw background
+ 
+    
+    # Draw background
     screen.fill(WHITE)
+
+
+        
+            
+                
+
      # Handle collision if predicted collision point is reached
-    if collision_point is not None:
-        for circle in objectArray:
-            if isinstance(circle, Circle):
-                circle.draw_projection(WIDTH, HEIGHT, collision_point)
+
+    for circle in objectArray:
+        if isinstance(circle, Circle):
+            circle.draw_projection(WIDTH, HEIGHT, collision_point)
 
         # # Update the positions and velocities based on the predicted collision point
         # for circle in collision_pair:
