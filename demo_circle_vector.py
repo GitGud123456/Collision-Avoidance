@@ -94,16 +94,7 @@ class Circle:
                 future_pos = future_pos + current_velo
                 pygame.draw.circle(screen, BLACK, (int(future_pos.x), int(future_pos.y)), self.radius,2)
             
-       
-        # if collision_point is not None:
-        #     collision_point = Vector(collision_point)
-        #     t = (collision_point - future_pos).vdiv(current_velo)
-        #     intersection_point = future_pos + current_velo * t
-        #     while (future_pos - intersection_point).dot(current_velo) >= self.radius+ 1e-6:
-        #         future_pos = future_pos + current_velo / current_velo.magnitude()
-        #         if (future_pos - intersection_point).dot(current_velo) < 0:
-        #             break
-        #         pygame.draw.circle(screen, BLACK, (int(future_pos.x), int(future_pos.y)), self.radius, 2)
+
 
     def check_wall_collision(self, width, height):
 
