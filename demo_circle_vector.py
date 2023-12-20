@@ -55,7 +55,7 @@ class Vector:
             return Vector(self.x * other.x, self.y * other.y)
         else:
             raise TypeError("Unsupported operand type for multiplication.")
-    
+        
 
     
     
@@ -81,19 +81,26 @@ class Circle:
         current_pos = self.position
         current_velo = self.velocity
         future_pos = current_pos
-        
-        if collision_point == None:
+        if collision_point is not None:
+            collision_point = Vector(collision_point)
+            if collision_point.x > width or collision_point.x < 0 or collision_point.y > height or collision_point.y < 0:
+                collision_point = None
+
+        if collision_point is None:
             while not (future_pos.x - self.radius <= 0 or future_pos.x + self.radius >= width or future_pos.y - self.radius <=0 or future_pos.y + self.radius >= height):
                 future_pos = future_pos + current_velo
-                pygame.draw.circle(screen, BLACK, (int(future_pos.x), int(future_pos.y)), self.radius,2)
+                # pygame.draw.circle(screen, BLACK, (int(future_pos.x), int(future_pos.y)), self.radius,2)
         else:
+
             collision_point = Vector(collision_point)
             relative_position = collision_point - future_pos
-            while relative_position.dot(current_velo) > 0:
+            while relative_position.dot(current_velo ) > 0:
                 print("why")
                 future_pos = future_pos + current_velo
-                pygame.draw.circle(screen, BLACK, (int(future_pos.x), int(future_pos.y)), self.radius,2)
-            
+                pygame.draw.circle(screen, (0,255,0), (int(future_pos.x), int(future_pos.y)), self.radius,2)
+                if (future_pos.x - self.radius <= collision_point.x <= future_pos.x + self.radius and
+                    future_pos.y - self.radius <= collision_point.y <= future_pos.y + self.radius):
+                    break
 
 
     def check_wall_collision(self, width, height):
@@ -285,8 +292,8 @@ clock = pygame.time.Clock()
 
 
 # Create circles using the Circle class
-# for _ in range(0,10):
-#     objectArray.append(Circle(position=[WIDTH // 4, HEIGHT // 2], velocity=[random.randint(-7,7), random.randint(-7,7)], radius=random.randint(10,40), color=RED,mass=random.randint(1,20)))
+for _ in range(0,5):
+    objectArray.append(Circle(position=[WIDTH // 4, HEIGHT // 2], velocity=[random.randint(-7,7), random.randint(-7,7)], radius=random.randint(10,40), color=RED,mass=random.randint(1,20)))
 circle1 = Circle(position=[WIDTH // 3, HEIGHT // 2], velocity=[7, 4], radius=20, color=RED,mass=1)
 circle2 = Circle(position=[WIDTH // 4, HEIGHT // 2], velocity=[-7, 2], radius=20, color=BLUE,mass=1)
 circle3 = Circle(position=[3 * WIDTH // 4, HEIGHT // 2], velocity=[-5, 1], radius=20, color=BLUE,mass=1)
@@ -316,7 +323,7 @@ while running:
 
     collision_pair,collision_point,earliest_collision_time = find_soonest_collision(filter_circles(objectArray))
  
-    
+    print(collision_pair)
     # Draw background
     screen.fill(WHITE)
 
@@ -329,7 +336,10 @@ while running:
 
     for circle in objectArray:
         if isinstance(circle, Circle):
-            circle.draw_projection(WIDTH, HEIGHT, collision_point)
+            if collision_pair != None and (circle == collision_pair[0] or circle == collision_pair[1]):
+                circle.draw_projection(WIDTH, HEIGHT, collision_point)
+            
+            circle.draw_projection(WIDTH, HEIGHT, None)
 
         # # Update the positions and velocities based on the predicted collision point
         # for circle in collision_pair:
