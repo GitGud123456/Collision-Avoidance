@@ -135,40 +135,7 @@ class Circle:
 
         pygame.draw.circle(screen, self.color, (int(self.position.x), int(self.position.y)), self.radius)
 
-    # def drawfuture(self, screen):
-    #     radius = 2
-    #     distance = math.sqrt((old.x - self.x)**2 + (old.y - self.y)**2)
-    #     if distance > 2*radius:
-    #         pygame.draw.circle(screen, BLACK, (int(self.x), int(self.y)), radius)
-
-
-
-
-
-
-# def solve_2d_collision(m1, u1x, u1y, m2, u2x, u2y,solve):
-
-#     # Conservation of Momentum equations
-#     v1x = (m1*u1x + m2*u2x - m2*(u1x - u2x)) / (m1 + m2)
-#     v1y = (m1*u1y + m2*u2y - m2*(u1y - u2y)) / (m1 + m2)
-    
-#     v2x = (m1*u1x + m2*u2x - m1*(u1x - u2x)) / (m1 + m2)
-#     v2y = (m1*u1y + m2*u2y - m1*(u1y - u2y)) / (m1 + m2)
-
-#     if solve == "v1x":
-#         return v1x
-#     elif solve == "v1y":
-#         return v1y
-#     elif solve == "v2x":
-#         return v2x
-#     elif solve == "v2y":
-#         return v2y
-#     else:
-#         return v1x, v1y, v2x, v2y
-
-
-
-
+  
 
 def perfectly_elastic_collision(circle1, circle2):
 
@@ -257,47 +224,30 @@ def handle_collision(circle1, circle2, earliest_collision_time):
 
 pygame.init()
 
-
-
 # Constants
-
 WIDTH, HEIGHT = 800, 600
-
 FPS = 60
 
-
-
 # Colors
-
 WHITE = (255, 255, 255)
-
 RED = (255, 0, 0)
-
 BLUE = (0, 0, 255)
 
 
 
 # Create screen
-
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-
 pygame.display.set_caption("Physics Simulation")
 
 
 
-# Clock for controlling the frame rate
-
+# Clock for frame rate
 clock = pygame.time.Clock()
 
 
-
-# Create circles using the Circle class
-# for _ in range(0,5):
-#     objectArray.append(Circle(position=[WIDTH // 4, HEIGHT // 2], velocity=[random.randint(-7,7), random.randint(-7,7)], radius=random.randint(10,40), color=RED,mass=random.randint(1,20)))
 circle1 = Circle(position=[WIDTH // 3, HEIGHT // 2], velocity=[7, 4], radius=20, color=RED,mass=1)
 circle2 = Circle(position=[WIDTH // 4, HEIGHT // 2], velocity=[-7, 2], radius=20, color=BLUE,mass=1)
 circle3 = Circle(position=[3 * WIDTH // 4, HEIGHT // 2], velocity=[-5, 1], radius=20, color=BLUE,mass=1)
-
 objectArray.append(circle2)
 objectArray.append(circle3)
 objectArray.append(circle1)
@@ -306,11 +256,9 @@ objectArray.append(circle1)
 running = True
 
 while running:
-
     for event in pygame.event.get():
         if event.type == QUIT:
             running = False
-
 
     # Update circle positions based on velocities
     for obj in objectArray:
@@ -327,9 +275,6 @@ while running:
     # Draw background
     screen.fill(WHITE)
 
-
-        
-            
                 
 
      # Handle collision if predicted collision point is reached
@@ -355,45 +300,13 @@ while running:
         else:
             pygame.draw.circle(obj[0], obj[1], obj[2], obj[3])
 
-
-
-
-    # # Draw background
-
-    # screen.fill(WHITE)
-    
-
-   
-
-
-    # # Draw the circles
-    # for obj in objectArray:
-    #     if isinstance(obj,Circle):
-    #         if collision_pair != None and (obj == collision_pair[0] or obj == collision_pair[1]):
-    #             obj.draw_projection(WIDTH,HEIGHT,collision_point)
-    #             obj.draw(screen)
-    #         else:
-    #             obj.draw_projection(WIDTH,HEIGHT,None)
-    #             obj.draw(screen)
-    #     else:
-    #         pygame.draw.circle(obj[0], obj[1], obj[2], obj[3])
-           
-
-    # # find_soonest_collision(objectArray)
-
-
     # Update the display
-
     pygame.display.flip()
 
-
-
     # Cap the frame rate
-
     clock.tick(FPS)
 
 
 
 # Quit pygame
-
 pygame.quit()
