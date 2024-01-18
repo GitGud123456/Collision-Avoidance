@@ -292,8 +292,8 @@ clock = pygame.time.Clock()
 
 
 # Create circles using the Circle class
-for _ in range(0,5):
-    objectArray.append(Circle(position=[WIDTH // 4, HEIGHT // 2], velocity=[random.randint(-7,7), random.randint(-7,7)], radius=random.randint(10,40), color=RED,mass=random.randint(1,20)))
+# for _ in range(0,5):
+#     objectArray.append(Circle(position=[WIDTH // 4, HEIGHT // 2], velocity=[random.randint(-7,7), random.randint(-7,7)], radius=random.randint(10,40), color=RED,mass=random.randint(1,20)))
 circle1 = Circle(position=[WIDTH // 3, HEIGHT // 2], velocity=[7, 4], radius=20, color=RED,mass=1)
 circle2 = Circle(position=[WIDTH // 4, HEIGHT // 2], velocity=[-7, 2], radius=20, color=BLUE,mass=1)
 circle3 = Circle(position=[3 * WIDTH // 4, HEIGHT // 2], velocity=[-5, 1], radius=20, color=BLUE,mass=1)
